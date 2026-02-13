@@ -1,0 +1,222 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>For My Valentine ❤️</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <style>
+        body {
+            text-align: center;
+            font-family: Arial, sans-serif;
+            background: linear-gradient(to right, #ff9a9e, #fad0c4);
+            color: white;
+            padding: 20px;
+            margin: 0;
+            overflow-x: hidden;
+        }
+        #slide {
+            font-size: 20px;
+            white-space: pre-wrap;
+            margin: 15px auto;
+            max-width: 90%;
+        }
+        #slideshow img {
+            width: 80%;
+            max-width: 250px;
+            height: auto;
+            border-radius: 15px;
+            margin: 10px auto;
+            display: none;
+        }
+        #audioPlayer {
+            margin: 20px 0;
+        }
+        #question {
+            display: none;
+            margin-top: 20px;
+        }
+        button {
+            padding: 12px 25px;
+            font-size: 16px;
+            margin: 10px 5px;
+            border: none;
+            border-radius: 15px;
+            cursor: pointer;
+        }
+        #yes {
+            background-color: red;
+            color: white;
+        }
+        #no {
+            background-color: white;
+        }
+        canvas {
+            position: fixed;
+            top: 0;
+            left: 0;
+            pointer-events: none;
+            width: 100%;
+            height: 100%;
+            z-index: 9999;
+        }
+    </style>
+</head>
+<body>
+
+<h2>Click play to start your music 🎵</h2>
+<div id="audioPlayer">
+  <audio id="bgMusic" controls>
+    <source src="Favorite Vice - Arthur Nery.mp3" type="audio/mpeg">
+    Your browser does not support the audio element.
+  </audio>
+</div>
+
+<div id="slide"></div>
+
+<!-- Slideshow -->
+<div id="slideshow">
+    <img src="a96b39993f22438af8a2dbd9db9e3fe3.png" class="slide-img">
+    <img src="ac2bb4a823ce41b3490c35d6b3d52707.png" class="slide-img">
+    <img src="e8ae4e4ed349e214848559ddcf450ea7.png" class="slide-img">
+</div>
+
+<!-- YES/NO Question -->
+<div id="question">
+    <h1 style="font-size:22px;">Will you be my Valentine? 💖</h1>
+    <button id="yes" onclick="yesAnswer()">YES 😍</button>
+    <button id="no" onclick="moveButton()">No 😅</button>
+</div>
+
+<script>
+// --- Messages ---
+const slides = [
+    "Hii Babyy Sheena 💖\n\nI hope you're having an amazing day today. I know I couldn't get you a gift this Valentine's, and I'm really sorry about that 😔.",
+    "I just wanted to let you know that even without a gift, my feelings for you are huge and I think about you all the time ❤️\n\nYou always make me smile, and I can't thank you enough for being you.",
+    "Babswi me sayo, I promise I’ll make it up to you! 🫣\n\nThere's something I really want to ask you, but first, I want you to feel how much you mean to me.",
+    "Are you ready?? 🥰\n\nBecause this is the moment where I need your answer... 💌",
+];
+
+let slideIndex = 0;
+let charIndex = 0;
+
+function typeSlide() {
+    const slideDiv = document.getElementById("slide");
+    if (charIndex < slides[slideIndex].length) {
+        slideDiv.innerHTML += slides[slideIndex].charAt(charIndex);
+        charIndex++;
+        setTimeout(typeSlide, 40);
+    } else {
+        setTimeout(() => {
+            slideIndex++;
+            charIndex = 0;
+            if(slideIndex < slides.length - 1){
+                slideDiv.innerHTML = "";
+                typeSlide();
+            } else {
+                showSlideshow();
+            }
+        }, 1500);
+    }
+}
+
+// --- Slideshow ---
+function showSlideshow(){
+    const images = document.querySelectorAll(".slide-img");
+    let idx = 0;
+    images.forEach(img => img.style.display="none");
+    images[idx].style.display = "block";
+    
+    const interval = setInterval(()=>{
+        images[idx].style.display = "none";
+        idx = (idx+1) % images.length;
+        images[idx].style.display = "block";
+    }, 2000);
+
+    setTimeout(()=>{
+        clearInterval(interval);
+        images[idx].style.display = "block";
+        setTimeout(showQuestion, 1000);
+    }, images.length*2000 + 1000);
+}
+
+// --- YES/NO ---
+function showQuestion(){
+    document.getElementById("question").style.display = "block";
+}
+
+// --- YES Button + Extended Love Message ---
+function yesAnswer(){
+    document.getElementById("question").style.display = "none";
+    document.getElementById("slide").innerHTML = "";
+    const body = document.body;
+    body.innerHTML = "<div id='finalMessage'></div><div id='audioPlayer'><audio id='bgMusic' controls><source src='Favorite Vice - Arthur Nery.mp3' type='audio/mpeg'></audio></div>";
+    startConfetti();
+
+    const finalMessages = [
+        "YAYYY I LOVE YOU SO MUCH ❤️😭",
+        "Thank you for saying YES! 🥰",
+        "I promise to always make you smile and be there for you 💖",
+        "You are my sunshine, my happiness, and my favorite person in the world 🌸",
+        "I can’t wait for all the adventures we’ll have together! 💌",
+        "Happy Valentine’s Day, Babyy Sheena 😘❤️"
+    ];
+
+    let msgIndex = 0;
+    let charIndex = 0;
+
+    function typeFinal(){
+        const finalDiv = document.getElementById("finalMessage");
+        if(msgIndex >= finalMessages.length) return;
+        if(charIndex < finalMessages[msgIndex].length){
+            finalDiv.innerHTML += finalMessages[msgIndex].charAt(charIndex);
+            charIndex++;
+            setTimeout(typeFinal, 40);
+        } else {
+            finalDiv.innerHTML += "<br><br>";
+            msgIndex++;
+            charIndex = 0;
+            setTimeout(typeFinal, 500);
+        }
+    }
+    typeFinal();
+}
+
+// --- NO Button ---
+function moveButton(){
+    const button = document.getElementById("no");
+    button.style.position = "absolute";
+    button.style.left = Math.random() * (window.innerWidth - 100) + "px";
+    button.style.top = Math.random() * (window.innerHeight - 50) + "px";
+}
+
+// --- Confetti ---
+function startConfetti(){
+    const canvas = document.createElement("canvas");
+    document.body.appendChild(canvas);
+    const ctx = canvas.getContext("2d");
+    canvas.width = window.innerWidth;
+    canvas.height = window.innerHeight;
+    const pieces = [];
+    for(let i=0;i<150;i++){
+        pieces.push({x:Math.random()*canvas.width,y:Math.random()*canvas.height-50,r:Math.random()*6+4,d:Math.random()*50+10,color:`hsl(${Math.random()*360},100%,50%)`});
+    }
+    function draw(){
+        ctx.clearRect(0,0,canvas.width,canvas.height);
+        pieces.forEach(p=>{
+            ctx.beginPath();
+            ctx.arc(p.x,p.y,p.r,0,Math.PI*2);
+            ctx.fillStyle = p.color;
+            ctx.fill();
+            p.y += Math.sqrt(p.d);
+            if(p.y>canvas.height) p.y=-10;
+        });
+        requestAnimationFrame(draw);
+    }
+    draw();
+}
+
+// Start typing slides
+window.onload = typeSlide;
+</script>
+
+</body>
+</html>
